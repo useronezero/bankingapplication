@@ -3,20 +3,21 @@ package banking_application;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-class customer {
+class Customer {
     Scanner s = new Scanner(System.in);
     private int accno;
     String name,address;
     double balance;
-    customer(int i){
+    Customer(int i){
         accno=i;
     }
     void addcustomer() {
         System.out.println("Your Generated Account Number is : "+ accno);
         System.out.print("Enter Customer Name : ");
         name = s.next();
+        s.nextLine();
         System.out.print("Enter customer Address : ");
-        address = s.next();
+        address = s.nextLine();
         while(true) {
             System.out.print("Enter the Inital money Deposited(500 or more) : ");
             balance = s.nextDouble();
@@ -67,7 +68,7 @@ public class Banking_application {
    
     public static void main(String[] args) {
         int i=0;
-        ArrayList<customer> cust = new ArrayList<>(100);
+        ArrayList<Customer> cust = new ArrayList<>(100);
         Scanner sl = new Scanner(System.in);
         while(true) {
             System.out.println("1.Add a customer\n"
@@ -81,7 +82,7 @@ public class Banking_application {
             int choice = sl.nextInt();
             switch(choice) {
                 case 1 : { 
-                            customer newcust = new customer(i);
+                            Customer newcust = new Customer(i);
                             newcust.addcustomer();
                             i++;
                             cust.add(newcust);
@@ -90,27 +91,35 @@ public class Banking_application {
                 case 2 : {
                            System.out.print("Please enter your Account number : ");
                            int input = sl.nextInt();
-                           if(input<i)
+                            try {
                                 cust.get(input).deposit();
-                           else
-                               System.out.println("Invalid Account muber.");
+                           }
+                           catch(ArrayIndexOutOfBoundsException b) {
+                               System.out.println("Invalid Account number.");
+                           }
+                           finally {
                            break;
+                            }
                 }
                 case 3 : {
                            System.out.print("Please enter your Account number : ");
                            int input = sl.nextInt();
-                           if(input<i)
+                           try {
                                 cust.get(input).withdraw();
-                           else 
+                           }
+                           catch(ArrayIndexOutOfBoundsException b) {
                                System.out.println("Invalid Account number.");
+                           }
+                           finally {
                            break;
+                            }
                 }
                 case 4 : {
                             System.out.print("Enter the your account number : ");
                             int youracc = sl.nextInt();
                             System.out.print("Please enter the beneficiary Account number : ");
                             int benacc=sl.nextInt();
-                            if((i>youracc)&&(i>benacc)){
+                            try {
                                 double yourcurbal = cust.get(youracc).balance;
                                 System.out.print("Please enter the amount to transfer : ");
                                 double traamt = sl.nextDouble();
@@ -123,8 +132,8 @@ public class Banking_application {
                                     System.out.println("Insufficent balance. Transfer Failed");
                                 }
                             }
-                            else {
-                                System.out.print("invaild Account Numbers.Try again");
+                            catch (ArrayIndexOutOfBoundsException b){
+                                System.out.println("invaild Account Numbers.Try again");
                             }
                             break;
                 }
@@ -135,9 +144,13 @@ public class Banking_application {
                                 sum += cust.get(j).balance;
                                 System.out.println("The Total Money in bank is : "+sum);
                             }
+                            if(sum==0.0){
+                                System.out.println("The bank is empty.");
+                            }
                             break;
                 }
                 case 6 : { 
+                          try {
                             int highacc=0;
                             double highbal = cust.get(0).balance;
                             for(int j=1;j<i;j++) {
@@ -149,7 +162,13 @@ public class Banking_application {
                             }
                             String name = cust.get(highacc).name;
                             System.out.println("The person with highest bank balance is : "+name+" With balance : "+highbal);
+                          }
+                          catch (IndexOutOfBoundsException b) {
+                              System.out.println("The Bank has No Accounts.");
+                          }
+                          finally {
                             break;
+                            }
                 }
                 default : {
                             System.exit(0);
