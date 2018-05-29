@@ -33,7 +33,7 @@ class customer {
         while(true){
             System.out.print("Enter the amount to be deposited : ");
             double deposit = s.nextDouble();
-            if(deposit >= 0.0) {
+            if(deposit > 0.0) {
                 balance +=deposit;
                 System.out.println("The updated balance is : "+balance);
                 break;
@@ -46,8 +46,8 @@ class customer {
         while(true){
             System.out.print("Enter the amount to be Withdrawn : ");
             double withdraw = s.nextDouble();
-            if(withdraw >= 0.0) {
-                balance +=withdraw;
+            if((withdraw > 0.0 )&& ((balance-withdraw)>=500)) {
+                balance -=withdraw;
                 System.out.println("The updated balance is : "+balance);
                 break;
             }
@@ -76,8 +76,9 @@ public class Banking_application {
             int choice = s.nextInt();
             switch(choice) {
                 case 1 : { 
-                            customer newcust = new customer(1);
+                            customer newcust = new customer(i);
                             newcust.addcustomer();
+                            i++;
                             cust.add(newcust);
                 }
                             }
