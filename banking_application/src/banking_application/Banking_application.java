@@ -51,6 +51,10 @@ class customer {
                 System.out.println("The updated balance is : "+balance);
                 break;
             }
+            else if(balance == 500) {
+                System.out.println("minimum Balance present.No withdrawal can me made.");
+                break;
+            }
             else
                 System.out.println("invalid withdrawl amount. Please try again");
         }
@@ -64,7 +68,7 @@ public class Banking_application {
     public static void main(String[] args) {
         int i=0;
         ArrayList<customer> cust = new ArrayList<>(100);
-        Scanner s = new Scanner(System.in);
+        Scanner sl = new Scanner(System.in);
         while(true) {
             System.out.println("1.Add a customer\n"
                               +"2.Deposit Money\n"
@@ -74,7 +78,7 @@ public class Banking_application {
                               +"6.Person with highest deposit\n"
                               +"7.Exit");
             System.out.print("Please Enter your choice : ");
-            int choice = s.nextInt();
+            int choice = sl.nextInt();
             switch(choice) {
                 case 1 : { 
                             customer newcust = new customer(i);
@@ -85,39 +89,44 @@ public class Banking_application {
                 }
                 case 2 : {
                            System.out.print("Please enter your Account number : ");
-                           int input = s.nextInt();
-                           cust.get(input).deposit();
+                           int input = sl.nextInt();
+                           if(input<i)
+                                cust.get(input).deposit();
+                           else
+                               System.out.println("Invalid Account muber.");
                            break;
                 }
                 case 3 : {
                            System.out.print("Please enter your Account number : ");
-                           int input = s.nextInt();
-                           cust.get(input).deposit();
+                           int input = sl.nextInt();
+                           if(input<i)
+                                cust.get(input).withdraw();
+                           else 
+                               System.out.println("Invalid Account number.");
                            break;
                 }
                 case 4 : {
                             System.out.print("Enter the your account number : ");
-                            int youracc = s.nextInt();
+                            int youracc = sl.nextInt();
                             System.out.print("Please enter the beneficiary Account number : ");
-                            int benacc=s.nextInt();
+                            int benacc=sl.nextInt();
                             if((i>youracc)&&(i>benacc)){
                                 double yourcurbal = cust.get(youracc).balance;
                                 System.out.print("Please enter the amount to transfer : ");
-                                double traamt = s.nextDouble();
+                                double traamt = sl.nextDouble();
                                 if((yourcurbal-traamt)>= 500) {
                                     cust.get(youracc).balance -= traamt;
                                     cust.get(benacc).balance += traamt;
-                                    break;
+                                    System.out.println("Transfer Successful.");
                                 }
                                 else {
                                     System.out.println("Insufficent balance. Transfer Failed");
-                                    break;
                                 }
                             }
                             else {
                                 System.out.print("invaild Account Numbers.Try again");
-                                break;
                             }
+                            break;
                 }
                 case 5 : {
                             double sum=0;
@@ -125,8 +134,8 @@ public class Banking_application {
                             {
                                 sum += cust.get(j).balance;
                                 System.out.println("The Total Money in bank is : "+sum);
-                                break;
                             }
+                            break;
                 }
                 case 6 : { 
                             int highacc=0;
@@ -139,7 +148,7 @@ public class Banking_application {
                                 }
                             }
                             String name = cust.get(highacc).name;
-                            System.out.println("The person with highest bank balance is : "+name+"With balance : "+highbal);
+                            System.out.println("The person with highest bank balance is : "+name+" With balance : "+highbal);
                             break;
                 }
                 default : {
