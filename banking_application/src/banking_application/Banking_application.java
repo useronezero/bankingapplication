@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.Scanner;
 class Customer {
     Scanner s = new Scanner(System.in);
-    private int accno;
+    private int accountNumber;
     String name,address;
     double balance;
-    Customer(int i){
-        accno=i;
+    Customer(int input){
+        accountNumber=input;
     }
-    void addcustomer() {
-        System.out.println("Your Generated Account Number is : "+ accno);
+    void addCustomer() {
+        System.out.println("Your Generated Account Number is : "+ accountNumber);
         System.out.print("Enter Customer Name : ");
         name = s.next();
         s.nextLine();
@@ -65,11 +65,11 @@ class Customer {
 
 public class Banking_application {
 
-   
+       static int index=0;
+       static ArrayList<Customer> cust = new ArrayList<>(100);
+       static Scanner scan = new Scanner(System.in);
+        
     public static void main(String[] args) {
-        int i=0;
-        ArrayList<Customer> cust = new ArrayList<>(100);
-        Scanner sl = new Scanner(System.in);
         while(true) {
             System.out.println("1.Add a customer\n"
                               +"2.Deposit Money\n"
@@ -79,102 +79,113 @@ public class Banking_application {
                               +"6.Person with highest deposit\n"
                               +"7.Exit");
             System.out.print("Please Enter your choice : ");
-            int choice = sl.nextInt();
+            int choice = scan.nextInt();
             switch(choice) {
-                case 1 : { 
-                            Customer newcust = new Customer(i);
-                            newcust.addcustomer();
-                            i++;
-                            cust.add(newcust);
+                case 1 :   
+                            addingCustomer();
                             break;
-                }
-                case 2 : {
-                           System.out.print("Please enter your Account number : ");
-                           int input = sl.nextInt();
-                            try {
-                                cust.get(input).deposit();
-                           }
-                           catch(ArrayIndexOutOfBoundsException b) {
-                               System.out.println("Invalid Account number.");
-                           }
-                           finally {
+                case 2 : 
+                           depositMoney();
                            break;
-                            }
-                }
-                case 3 : {
-                           System.out.print("Please enter your Account number : ");
-                           int input = sl.nextInt();
-                           try {
-                                cust.get(input).withdraw();
-                           }
-                           catch(ArrayIndexOutOfBoundsException b) {
-                               System.out.println("Invalid Account number.");
-                           }
-                           finally {
+                
+                case 3 :  withdrawMoney();
                            break;
-                            }
-                }
-                case 4 : {
-                            System.out.print("Enter the your account number : ");
-                            int youracc = sl.nextInt();
-                            System.out.print("Please enter the beneficiary Account number : ");
-                            int benacc=sl.nextInt();
-                            try {
-                                double yourcurbal = cust.get(youracc).balance;
-                                System.out.print("Please enter the amount to transfer : ");
-                                double traamt = sl.nextDouble();
-                                if((yourcurbal-traamt)>= 500) {
-                                    cust.get(youracc).balance -= traamt;
-                                    cust.get(benacc).balance += traamt;
-                                    System.out.println("Transfer Successful.");
-                                }
-                                else {
-                                    System.out.println("Insufficent balance. Transfer Failed");
-                                }
-                            }
-                            catch (ArrayIndexOutOfBoundsException b){
-                                System.out.println("invaild Account Numbers.Try again");
-                            }
+                          
+                case 4 : 
+                            transferMoney();
                             break;
-                }
-                case 5 : {
-                            double sum=0;
-                            for(int j=0;j<i;j++)
-                            {
-                                sum += cust.get(j).balance;
-                                System.out.println("The Total Money in bank is : "+sum);
-                            }
-                            if(sum==0.0){
-                                System.out.println("The bank is empty.");
-                            }
+                
+                case 5 : 
+                            totalMoneyInBank();
                             break;
-                }
-                case 6 : { 
-                          try {
-                            int highacc=0;
-                            double highbal = cust.get(0).balance;
-                            for(int j=1;j<i;j++) {
-                                double bal = cust.get(j).balance;
-                                if(highbal<bal){
-                                    highbal = bal;
-                                    highacc = j;
-                                }
-                            }
-                            String name = cust.get(highacc).name;
-                            System.out.println("The person with highest bank balance is : "+name+" With balance : "+highbal);
-                          }
-                          catch (IndexOutOfBoundsException b) {
-                              System.out.println("The Bank has No Accounts.");
-                          }
-                          finally {
+                
+                case 6 : 
+                            richestPerson();
                             break;
-                            }
-                }
-                default : {
+                
+                default : 
                             System.exit(0);
-                }
+                
                      }
         }
     }
-    
+    static void addingCustomer() {
+        Customer newcust = new Customer(index);
+        newcust.addCustomer();
+        index++;
+        cust.add(newcust);
+    }
+    static void depositMoney() {
+        System.out.print("Please enter your Account number : ");
+        int input = scan.nextInt();
+         try {
+             cust.get(input).deposit();
+        }
+        catch(ArrayIndexOutOfBoundsException b) {
+            System.out.println("Invalid Account number.");
+        }
+    }
+    static void withdrawMoney() {
+        System.out.print("Please enter your Account number : ");
+        int input = scan.nextInt();
+        try {
+             cust.get(input).withdraw();
+        }
+        catch(ArrayIndexOutOfBoundsException b) {
+            System.out.println("Invalid Account number.");
+        }
+    }
+    static void transferMoney() {
+        System.out.print("Enter the your account number : ");
+        int youracc = scan.nextInt();
+        System.out.print("Please enter the beneficiary Account number : ");
+        int benacc=scan.nextInt();
+        try {
+            double yourCurrentBalance = cust.get(youracc).balance;
+            double benificiaryBalance = cust.get(benacc).balance;
+            System.out.print("Please enter the amount to transfer : ");
+            double transferAmount = scan.nextDouble();
+            if((yourCurrentBalance-transferAmount)>= 500) {
+                cust.get(youracc).balance -= transferAmount;
+                cust.get(benacc).balance += transferAmount;
+                System.out.println("Transfer Successful.");
+            }
+            else {
+                System.out.println("Insufficent balance. Transfer Failed");
+            }
+        }
+        catch (ArrayIndexOutOfBoundsException b){
+            System.out.println("invaild Account Numbers.Try again");
+        }
+    }
+    static void totalMoneyInBank() {
+        double sum=0;
+        for(int j=0;j<index;j++)
+        {
+            sum += cust.get(j).balance;
+        }
+        if(sum==0.0){
+            System.out.println("The bank is empty.");
+        }
+        else
+            System.out.println("The Total Money in bank is : "+sum);
+    }
+    static void richestPerson() {
+        try {
+                int highacc=0;
+                double highbal = cust.get(0).balance;
+                for(int j=1;j<index;j++) {
+                    double bal = cust.get(j).balance;
+                    if(highbal<bal){
+                        highbal = bal;
+                        highacc = j;
+                    }
+                }
+                String name = cust.get(highacc).name;
+                System.out.println("The person with highest bank balance is : "+name+" With balance : "+highbal);
+        }
+        catch (IndexOutOfBoundsException b) {
+            System.out.println("The Bank has No Accounts.");
+        }
+    }
 }
