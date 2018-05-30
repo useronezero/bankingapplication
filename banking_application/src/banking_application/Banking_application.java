@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 class Customer {
     Scanner scan = new Scanner(System.in);
-    private int accountNumber;
+    private final int  accountNumber;
     String customerName,customerAddress;
     double balance;
     Customer(int input){
