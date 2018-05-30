@@ -4,9 +4,9 @@ package banking_application;
 import java.util.ArrayList;
 import java.util.Scanner;
 class Customer {
-    Scanner s = new Scanner(System.in);
+    Scanner scan = new Scanner(System.in);
     private int accountNumber;
-    String name,address;
+    String customerName,customerAddress;
     double balance;
     Customer(int input){
         accountNumber=input;
@@ -14,13 +14,13 @@ class Customer {
     void addCustomer() {
         System.out.println("Your Generated Account Number is : "+ accountNumber);
         System.out.print("Enter Customer Name : ");
-        name = s.next();
-        s.nextLine();
+        customerName = scan.next();
+        scan.nextLine();
         System.out.print("Enter customer Address : ");
-        address = s.nextLine();
+        customerAddress = scan.nextLine();
         while(true) {
             System.out.print("Enter the Inital money Deposited(500 or more) : ");
-            balance = s.nextDouble();
+            balance = scan.nextDouble();
             if(balance >= 500.00) {
                 System.out.println("Account Successfully Created.");
                 break;
@@ -33,7 +33,7 @@ class Customer {
     void deposit() {
         while(true){
             System.out.print("Enter the amount to be deposited : ");
-            double deposit = s.nextDouble();
+            double deposit = scan.nextDouble();
             if(deposit > 0.0) {
                 balance +=deposit;
                 System.out.println("The updated balance is : "+balance);
@@ -46,7 +46,7 @@ class Customer {
     void withdraw() {
         while(true){
             System.out.print("Enter the amount to be Withdrawn : ");
-            double withdraw = s.nextDouble();
+            double withdraw = scan.nextDouble();
             if((withdraw > 0.0 )&& ((balance-withdraw)>=500)) {
                 balance -=withdraw;
                 System.out.println("The updated balance is : "+balance);
@@ -181,7 +181,7 @@ public class Banking_application {
                         accountWithHighestBalance = j;
                     }
                 }
-                String name = customerArray.get(accountWithHighestBalance).name;
+                String name = customerArray.get(accountWithHighestBalance).customerName;
                 System.out.println("The person with highest bank balance is : "+name+" With balance : "+highestBalance);
         }
         catch (IndexOutOfBoundsException b) {
