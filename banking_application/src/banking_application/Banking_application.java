@@ -66,7 +66,7 @@ class Customer {
 public class Banking_application {
 
        static int index=0;
-       static ArrayList<Customer> cust = new ArrayList<>(100);
+       static ArrayList<Customer> customerArray = new ArrayList<>(100);
        static Scanner scan = new Scanner(System.in);
         
     public static void main(String[] args) {
@@ -110,16 +110,16 @@ public class Banking_application {
         }
     }
     static void addingCustomer() {
-        Customer newcust = new Customer(index);
-        newcust.addCustomer();
+        Customer newCustomerobject = new Customer(index);
+        newCustomerobject.addCustomer();
         index++;
-        cust.add(newcust);
+        customerArray.add(newCustomerobject);
     }
     static void depositMoney() {
         System.out.print("Please enter your Account number : ");
         int input = scan.nextInt();
          try {
-             cust.get(input).deposit();
+             customerArray.get(input).deposit();
         }
         catch(ArrayIndexOutOfBoundsException b) {
             System.out.println("Invalid Account number.");
@@ -129,7 +129,7 @@ public class Banking_application {
         System.out.print("Please enter your Account number : ");
         int input = scan.nextInt();
         try {
-             cust.get(input).withdraw();
+             customerArray.get(input).withdraw();
         }
         catch(ArrayIndexOutOfBoundsException b) {
             System.out.println("Invalid Account number.");
@@ -137,17 +137,17 @@ public class Banking_application {
     }
     static void transferMoney() {
         System.out.print("Enter the your account number : ");
-        int youracc = scan.nextInt();
+        int yourAccountNumber = scan.nextInt();
         System.out.print("Please enter the beneficiary Account number : ");
-        int benacc=scan.nextInt();
+        int beneficiaryAccountNumber=scan.nextInt();
         try {
-            double yourCurrentBalance = cust.get(youracc).balance;
-            double benificiaryBalance = cust.get(benacc).balance;
+            double yourCurrentBalance = customerArray.get(yourAccountNumber).balance;
+            double benificiaryBalance = customerArray.get(beneficiaryAccountNumber).balance;
             System.out.print("Please enter the amount to transfer : ");
             double transferAmount = scan.nextDouble();
             if((yourCurrentBalance-transferAmount)>= 500) {
-                cust.get(youracc).balance -= transferAmount;
-                cust.get(benacc).balance += transferAmount;
+                customerArray.get(yourAccountNumber).balance -= transferAmount;
+                customerArray.get(beneficiaryAccountNumber).balance += transferAmount;
                 System.out.println("Transfer Successful.");
             }
             else {
@@ -159,30 +159,30 @@ public class Banking_application {
         }
     }
     static void totalMoneyInBank() {
-        double sum=0;
+        double totalMoneyInBank=0;
         for(int j=0;j<index;j++)
         {
-            sum += cust.get(j).balance;
+            totalMoneyInBank += customerArray.get(j).balance;
         }
-        if(sum==0.0){
+        if(totalMoneyInBank==0.0){
             System.out.println("The bank is empty.");
         }
         else
-            System.out.println("The Total Money in bank is : "+sum);
+            System.out.println("The Total Money in bank is : "+totalMoneyInBank);
     }
     static void richestPerson() {
         try {
-                int highacc=0;
-                double highbal = cust.get(0).balance;
+                int accountWithHighestBalance=0;
+                double highestBalance = customerArray.get(0).balance;
                 for(int j=1;j<index;j++) {
-                    double bal = cust.get(j).balance;
-                    if(highbal<bal){
-                        highbal = bal;
-                        highacc = j;
+                    double bal = customerArray.get(j).balance;
+                    if(highestBalance<bal){
+                        highestBalance = bal;
+                        accountWithHighestBalance = j;
                     }
                 }
-                String name = cust.get(highacc).name;
-                System.out.println("The person with highest bank balance is : "+name+" With balance : "+highbal);
+                String name = customerArray.get(accountWithHighestBalance).name;
+                System.out.println("The person with highest bank balance is : "+name+" With balance : "+highestBalance);
         }
         catch (IndexOutOfBoundsException b) {
             System.out.println("The Bank has No Accounts.");
