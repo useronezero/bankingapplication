@@ -18,57 +18,25 @@ class Customer {
      * accountNumber stores the account number of the customer and is of the type integer.
      * 
      * @param input the input given from main class to setup account number.
+     * @param name it the name of the customer
+     * @param address it is the address of the customer
+     * @param deposit it the initial deposit of the customer at the creation of the account.
      * 
      */
-    Customer(int input){
+    Customer(int input,String name,String address,double deposit){
         accountNumber=input;
-    }
-    /**
-     * When called this method takes input from the user and creates a new bank account
-     * for the user.
-     * It also has a while loop and if statement to make sure that the account isn't created unless the 
-     * minimum balance requirement are met. i.e the initial amount deposited needs to be 500 or more.
-     * scan: this is used to take input from the user and it is of the type Scanner.
-     * customerName: this stores the name of the customer and is of the type String
-     * customerAddress: this stores the address of the customer and is of the type String.
-     * balance: this stores the current balance of the customer at any give time and is of the type double.
-     */
-    void addCustomer() {
-        System.out.println("Your Generated Account Number is : "+ accountNumber);
-        System.out.print("Enter Customer Name : ");
-        customerName = scan.next();
-        scan.nextLine();
-        System.out.print("Enter customer Address : ");
-        customerAddress = scan.nextLine();
-        while(true) {
-            System.out.print("Enter the Inital money Deposited(500 or more) : ");
-            balance = scan.nextDouble();
-            if(balance >= 500.00) {
-                System.out.println("Account Successfully Created.");
-                break;
-            }
-            else
-                System.out.println("The input inital deposited is less than 500.please try again.");
-        }
-        
+        customerName=name;
+        customerAddress=address;
+        balance=deposit;
     }
     /**
      * The job of this method is to update the balance when the customer wants to deposit/add money to his/her
      * bank account.
      * It also has while loop and a if statement to make sure No Invalid Amount is being deposited. 
      */
-    void deposit() {
-        while(true){
-            System.out.print("Enter the amount to be deposited : ");
-            double deposit = scan.nextDouble();
-            if(deposit > 0.0) {
-                balance +=deposit;
-                System.out.println("The updated balance is : "+balance);
-                break;
-            }
-            else
-                System.out.println("invalid Deposit amount. Please try again");
-        }
+    int deposit(double deposit) {
+        balance+=deposit;
+        return 0;
     }
     /**
      *The job of this method is to update the balance when the customer wants to Withdraw/Subtract money from his/her
@@ -76,22 +44,9 @@ class Customer {
      * the method a while loop with if conditions to make sure the minimum balance is maintained at all times.
      * And also makes sure that no Invalid amount is being withdrawn.
      */
-    void withdraw() {
-        while(true){
-            System.out.print("Enter the amount to be Withdrawn : ");
-            double withdraw = scan.nextDouble();
-            if((withdraw > 0.0 )&& ((balance-withdraw)>=500)) {
-                balance -=withdraw;
-                System.out.println("The updated balance is : "+balance);
-                break;
-            }
-            else if(balance == 500) {
-                System.out.println("minimum Balance present.No withdrawal can me made.");
-                break;
-            }
-            else
-                System.out.println("invalid withdrawl amount. Please try again");
-        }
+    int withdraw(double withdraw) {
+        balance-=withdraw;
+        return 0;
     }
     
 }
@@ -132,7 +87,7 @@ public class BankingApplication {
             int choice = scan.nextInt();
             switch(choice) {
                 case 1 :   
-                            addingCustomer();
+                            userDataInput();
                             break;
                 case 2 : 
                            depositMoney();
@@ -142,7 +97,7 @@ public class BankingApplication {
                            break;
                           
                 case 4 : 
-                            transferMoney();
+                            collectAccountNUmbersForTransfer();
                             break;
                 
                 case 5 : 
@@ -159,16 +114,49 @@ public class BankingApplication {
                      }
         }
     }
+    static void userDataInput() {
+         String customerName,customerAddress;
+         double initialDeposit;
+         int status;
+        System.out.print("Enter Customer Name : ");
+        customerName = scan.next();
+        scan.nextLine();
+        System.out.print("Enter customer Address : ");
+        customerAddress = scan.nextLine();
+        while(true) {
+            System.out.print("Enter the Inital money Deposited(500 or more) : ");
+            initialDeposit = scan.nextDouble();
+            if(initialDeposit >= 500.00) {
+                status = addingCustomer(index,customerName,customerAddress,initialDeposit);
+                break;
+            }
+            else
+                System.out.println("The input inital deposited is less than 500.please try again.");
+        }
+        if(status == 0) {
+            System.out.println("Account Successfully created.");
+        }
+        else
+            System.out.println("Error unable to Create Account");
+    }
     /**
+     * When called this method takes input from the user and creates a new bank account
+     * for the user.
+     * It also has a while loop and if statement to make sure that the account isn't created unless the 
+     * minimum balance requirement are met. i.e the initial amount deposited needs to be 500 or more.
+     * scan: this is used to take input from the user and it is of the type Scanner.
+     * customerName: this stores the name of the customer and is of the type String
+     * customerAddress: this stores the address of the customer and is of the type String.
+     * balance: this stores the current balance of the customer at any give time and is of the type double.
      * This method when called creates a new object of type Customer, initialize
      * it with index value as account number, called the method addCustomer
      * to take the customer details and then it adds that object to the array list.
      */
-    static void addingCustomer() {
-        Customer newCustomerobject = new Customer(index);
-        newCustomerobject.addCustomer();
+    static int addingCustomer(int accno,String name,String address,double deposit) {
+        Customer newCustomerobject = new Customer(accno,name,address,deposit);
         index++;
         customerArray.add(newCustomerobject);
+        return 0;
     }
     /**
      * this method is called when the customer wants to add money to his/her Account.
@@ -182,7 +170,16 @@ public class BankingApplication {
         System.out.print("Please enter your Account number : ");
         int input = scan.nextInt();
          try {
-             customerArray.get(input).deposit();
+            while(true){
+            System.out.print("Enter the amount to be deposited : ");
+            double deposit = scan.nextDouble();
+            if(deposit > 0.0) {
+                customerArray.get(input).deposit(deposit);
+                break;
+            }
+            else
+                System.out.println("invalid Deposit amount. Please try again");
+        }
         }
         catch(ArrayIndexOutOfBoundsException b) {
             System.out.println("Invalid Account number.");
@@ -200,11 +197,33 @@ public class BankingApplication {
         System.out.print("Please enter your Account number : ");
         int input = scan.nextInt();
         try {
-             customerArray.get(input).withdraw();
+            while(true){
+            System.out.print("Enter the amount to be Withdrawn : ");
+            double withdraw = scan.nextDouble();
+            double bal = customerArray.get(input).balance;
+            if((withdraw > 0.0 )&& ((bal-withdraw)>=500)) {
+                customerArray.get(input).withdraw(withdraw);
+                break;
+            }
+            else if(bal == 500) {
+                System.out.println("minimum Balance present.No withdrawal can me made.");
+                break;
+            }
+            else
+                System.out.println("invalid withdrawl amount. Please try again");
+        }
+
         }
         catch(ArrayIndexOutOfBoundsException b) {
             System.out.println("Invalid Account number.");
         }
+    }
+    static void collectAccountNUmbersForTransfer() {
+        System.out.print("Enter the your account number : ");
+        int yourAccountNumber = scan.nextInt();
+        System.out.print("Please enter the beneficiary Account number : ");
+        int beneficiaryAccountNumber=scan.nextInt();
+        transferMoney(yourAccountNumber,beneficiaryAccountNumber);
     }
     /**
      * this method is called when the customer wants to Transfer money from his/her Account.
@@ -219,11 +238,7 @@ public class BankingApplication {
      * it throws a ArrayInderOutOfBoundsException.
      * The Exception is caught and an error message is shown to the user.
      */
-    static void transferMoney() {
-        System.out.print("Enter the your account number : ");
-        int yourAccountNumber = scan.nextInt();
-        System.out.print("Please enter the beneficiary Account number : ");
-        int beneficiaryAccountNumber=scan.nextInt();
+    static int transferMoney(int yourAccountNumber,int beneficiaryAccountNumber) {
         try {
             double yourCurrentBalance = customerArray.get(yourAccountNumber).balance;
             double benificiaryBalance = customerArray.get(beneficiaryAccountNumber).balance;
@@ -232,14 +247,16 @@ public class BankingApplication {
             if((yourCurrentBalance-transferAmount)>= 500) {
                 customerArray.get(yourAccountNumber).balance -= transferAmount;
                 customerArray.get(beneficiaryAccountNumber).balance += transferAmount;
-                System.out.println("Transfer Successful.");
+                return 0;
             }
             else {
-                System.out.println("Insufficent balance. Transfer Failed");
+                return 1;
+                //System.out.println("Insufficent balance. Transfer Failed");
             }
         }
         catch (ArrayIndexOutOfBoundsException b){
-            System.out.println("invaild Account Numbers.Try again");
+        return 1;    
+        //System.out.println("invaild Account Numbers.Try again");
         }
     }
     /**
@@ -247,7 +264,7 @@ public class BankingApplication {
      * present in the bank.
      * it also has a for when the bank is empty.
      */
-    static void totalMoneyInBank() {
+    static int totalMoneyInBank() {
         double totalMoneyInBank=0;
         for(int j=0;j<index;j++)
         {
@@ -255,9 +272,12 @@ public class BankingApplication {
         }
         if(totalMoneyInBank==0.0){
             System.out.println("The bank is empty.");
+            return 1;
         }
         else
+            
             System.out.println("The Total Money in bank is : "+totalMoneyInBank);
+            return 0;
     }
     /**
      * This method is used to find the Richest customer.
@@ -265,7 +285,7 @@ public class BankingApplication {
      * the highest balance.
      * Then it displays their Name with their Balance.
      */
-    static void richestPerson() {
+    static int richestPerson() {
         try {
                 int accountWithHighestBalance=0;
                 double highestBalance = customerArray.get(0).balance;
@@ -278,9 +298,11 @@ public class BankingApplication {
                 }
                 String name = customerArray.get(accountWithHighestBalance).customerName;
                 System.out.println("The person with highest bank balance is : "+name+" With balance : "+highestBalance);
+                return 0;
         }
         catch (IndexOutOfBoundsException b) {
             System.out.println("The Bank has No Accounts.");
+            return 1;
         }
     }
 }
